@@ -1,0 +1,148 @@
+import 'package:fish_app/Classes/fish.dart';
+import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+class  StatisticsPage extends StatefulWidget {
+  final List<Fish?> fishes;
+  @override
+ StatisticsPageState createState() => StatisticsPageState();
+ StatisticsPage({Key? key, required this.fishes}) : super(key: key);
+}
+
+class StatisticsPageState extends State<StatisticsPage> {
+  // Example variables to represent statistics
+  String totalPosts = '120';
+  String totalLikes = '340';
+  String totalFollowers = '230';
+  String totalComments = '56';
+
+  // Example method to update statistics (this could be triggered by some event)
+  void updateStatistics() {
+    setState(() {
+      totalPosts = '150';  // Example new value
+      totalLikes = '400';  // Example new value
+      totalFollowers = '300';  // Example new value
+      totalComments = '75';  // Example new value
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChartPage();
+  }
+
+  Widget _buildStatisticsCard(String title, String value) {
+    return Card(
+      elevation: 4,
+      child: ListTile(
+        title: Text(title),
+        subtitle: Text(value),
+      ),
+    );
+  }
+}
+
+
+class ChartPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Flutter Charts'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Line Chart',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              height: 250,
+              child: LineChart(
+                LineChartData(
+                  gridData: FlGridData(show: false),
+                  titlesData: FlTitlesData(
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true),
+                    ),
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                  ),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  minX: 0,
+                  maxX: 6,
+                  minY: 0,
+                  maxY: 6,
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: [
+                        FlSpot(0, 1),
+                        FlSpot(1, 3),
+                        FlSpot(2, 2),
+                        FlSpot(3, 5),
+                        FlSpot(4, 3),
+                        FlSpot(5, 4),
+                        FlSpot(6, 5),
+                      ],
+                      isCurved: true,
+                      color: Colors.blue,
+                      dotData: FlDotData(show: false),
+                      belowBarData: BarAreaData(show: false),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 40),
+            Text(
+              'Bar Chart',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              height: 250,
+              child: BarChart(
+                BarChartData(
+                  titlesData: FlTitlesData(
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true, reservedSize: 38),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true),
+                    ),
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                  ),
+                  borderData: FlBorderData(show: false),
+                  barGroups: [
+                    BarChartGroupData(x: 0, barRods: [BarChartRodData(toY: 8, color: Colors.blue)]),
+                    BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 6, color: Colors.blue)]),
+                    BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 5, color: Colors.blue)]),
+                    BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 7, color: Colors.blue)]),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
