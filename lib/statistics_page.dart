@@ -5,7 +5,7 @@ class  StatisticsPage extends StatefulWidget {
   final List<Fish?> fishes;
   @override
  StatisticsPageState createState() => StatisticsPageState();
- StatisticsPage({Key? key, required this.fishes}) : super(key: key);
+ const StatisticsPage({super.key, required this.fishes});
 }
 
 class StatisticsPageState extends State<StatisticsPage> {
@@ -30,19 +30,13 @@ class StatisticsPageState extends State<StatisticsPage> {
     return ChartPage();
   }
 
-  Widget _buildStatisticsCard(String title, String value) {
-    return Card(
-      elevation: 4,
-      child: ListTile(
-        title: Text(title),
-        subtitle: Text(value),
-      ),
-    );
-  }
+
 }
 
 
 class ChartPage extends StatelessWidget {
+  const ChartPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,40 +100,7 @@ class ChartPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 40),
-            Text(
-              'Bar Chart',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            SizedBox(
-              height: 250,
-              child: BarChart(
-                BarChartData(
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: true, reservedSize: 38),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: true),
-                    ),
-                    rightTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  barGroups: [
-                    BarChartGroupData(x: 0, barRods: [BarChartRodData(toY: 8, color: Colors.blue)]),
-                    BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 6, color: Colors.blue)]),
-                    BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 5, color: Colors.blue)]),
-                    BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 7, color: Colors.blue)]),
-                  ],
-                ),
-              ),
-            ),
+            
           ],
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fish_app/Classes/fish.dart';
 class NewPage extends StatefulWidget {
+  const NewPage({super.key});
+
   @override
   _NewPageState createState() => _NewPageState();
 }
@@ -14,7 +16,7 @@ class _NewPageState extends State<NewPage> {
   String? selectedItem;
   Fish fish = Fish();
 
-   TextEditingController _dateController = TextEditingController();
+   final TextEditingController _dateController = TextEditingController();
 
   Future<void> _selectDate(BuildContext context) async {
     // Get the current date

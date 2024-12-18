@@ -7,6 +7,8 @@ void main() {
 }
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -46,49 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Profile Picture
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(profilePictureUrl),
-            ),
-            SizedBox(height: 20),
-
-            // Name
-            Text(
-              name,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-
-            // Email
-            Text(
-              email,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            SizedBox(height: 20),
-
-            // Bio
-            Text(
-              bio,
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-
-            // Update Button
-            ElevatedButton(
-              onPressed: () {
-                // You can use this button to update other profile info or navigate
-              },
-              child: Text('Save Changes'),
-            ),
-          ],
-        ),
-      ),
+      
     );
   }
 }
@@ -97,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
 class EditProfileDialog extends StatefulWidget {
   final Function(String, String) onUpdate;
 
-  EditProfileDialog({required this.onUpdate});
+  const EditProfileDialog({super.key, required this.onUpdate});
 
   @override
   _EditProfileDialogState createState() => _EditProfileDialogState();
