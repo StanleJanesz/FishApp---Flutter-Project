@@ -11,11 +11,21 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
+	<string>6.0</string> 
 	<key>CFBundleName</key>
 	<string>fish_app</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>Access to the location is needed for the app when open.</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Access to the location is needed when in the background.</string>
+<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+<dict>
+  <key>SecondKey</key>
+  <string>The App requires temporary access to the device location.</string>
+</dict>
+
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

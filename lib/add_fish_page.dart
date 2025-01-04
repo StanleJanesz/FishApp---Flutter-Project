@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fish_app/Classes/fish.dart';
+import 'package:fish_app/Services/database_service.dart';
 class NewPage extends StatefulWidget {
   const NewPage({super.key});
 
@@ -12,7 +13,7 @@ class _NewPageState extends State<NewPage> {
   final TextEditingController _intController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
   DateTime? pickedDate ;
-  List<String> items = FishType().types;
+  List<String> items = FishType.types;
   String? selectedItem;
   Fish fish = Fish();
 
@@ -43,7 +44,7 @@ class _NewPageState extends State<NewPage> {
     }
 
   // This method validates and shows the input values
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       // If the form is valid, show a dialog with the input values
       final intInput = _intController.text;
@@ -55,24 +56,11 @@ class _NewPageState extends State<NewPage> {
       fish.date = pickedDate ?? DateTime.now();
       fish.catchedBy = textInput;
       fish.type.type = selectedItem ?? "Unknown";
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Form Submitted'),
-          content: Text(
-            'Integer input: $intValue\nText input: $textInput',
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pop(context,fish); // Go back to the previous screen after submission
-              },
-              child: Text('Close'),
-            ),
-          ],
-        ),
-      );
+           Navigator.pop(context,fish); // Go back to the previous screen after submission
+      final databseServis = DatabaseService();
+      databseServis.addFish(fish);
+      final test = await databseServis.getAll();
+      print(test.length);
     }
   }
 

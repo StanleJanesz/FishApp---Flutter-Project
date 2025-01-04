@@ -1,33 +1,21 @@
-import 'package:fish_app/Classes/fish.dart';
+ import 'package:fish_app/Classes/fish.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 class  StatisticsPage extends StatefulWidget {
   final List<Fish?> fishes;
   @override
- StatisticsPageState createState() => StatisticsPageState();
+ StatisticsPageState createState() => StatisticsPageState(fishes : this.fishes);
  const StatisticsPage({super.key, required this.fishes});
 }
 
 class StatisticsPageState extends State<StatisticsPage> {
-  // Example variables to represent statistics
-  String totalPosts = '120';
-  String totalLikes = '340';
-  String totalFollowers = '230';
-  String totalComments = '56';
 
-  // Example method to update statistics (this could be triggered by some event)
-  void updateStatistics() {
-    setState(() {
-      totalPosts = '150';  // Example new value
-      totalLikes = '400';  // Example new value
-      totalFollowers = '300';  // Example new value
-      totalComments = '75';  // Example new value
-    });
-  }
+ StatisticsPageState({ required this.fishes});
+  final List<Fish?> fishes;
 
   @override
   Widget build(BuildContext context) {
-    return ChartPage();
+    return ChartPage(fishes :this.fishes);
   }
 
 
@@ -35,8 +23,8 @@ class StatisticsPageState extends State<StatisticsPage> {
 
 
 class ChartPage extends StatelessWidget {
-  const ChartPage({super.key});
-
+  const ChartPage({super.key, required this.fishes});
+final List<Fish?> fishes;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,20 +65,12 @@ class ChartPage extends StatelessWidget {
                     border: Border.all(color: Colors.grey),
                   ),
                   minX: 0,
-                  maxX: 6,
+                  maxX: generateChartPoints(fishes).length.toDouble() -1 ,
                   minY: 0,
-                  maxY: 6,
+                  maxY: 100,
                   lineBarsData: [
                     LineChartBarData(
-                      spots: [
-                        FlSpot(0, 1),
-                        FlSpot(1, 3),
-                        FlSpot(2, 2),
-                        FlSpot(3, 5),
-                        FlSpot(4, 3),
-                        FlSpot(5, 4),
-                        FlSpot(6, 5),
-                      ],
+                      spots: generateChartPoints(fishes),
                       isCurved: true,
                       color: Colors.blue,
                       dotData: FlDotData(show: false),
@@ -105,5 +85,15 @@ class ChartPage extends StatelessWidget {
         ),
       ),
     );
+  }
+  List<FlSpot> generateChartPoints(List<Fish?> fishes)
+  {
+    List<FlSpot> points = List<FlSpot>.empty(growable: true);
+  for (int i = 0; i < fishes.length; i++)
+  {
+    points.add(FlSpot(i.toDouble(), fishes[i]?.size.toDouble() ?? 0.0));
+  }
+
+  return points;
   }
 }

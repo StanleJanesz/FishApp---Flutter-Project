@@ -1,4 +1,5 @@
 class Fish {
+  int id;
   int size;
   FishType type;
   DateTime date;
@@ -7,11 +8,12 @@ class Fish {
       : size = 0,
         type = FishType(),
         date = DateTime.now(),
-        catchedBy = "User";
+        catchedBy = "User",
+        id = 0;
 }
 
 class FishType {
   String type;
-  List<String> types = ['Okoń', 'Sum', 'Leszcz', 'Szczupak'];
+  static final List<String> types = ['Okoń', 'Sum', 'Leszcz', 'Szczupak'];
   FishType() : type = "Okoń";
 }
