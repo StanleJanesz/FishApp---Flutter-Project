@@ -1,5 +1,6 @@
 import 'package:fish_app/Classes/fish.dart';
 import 'package:fish_app/Services/location_service.dart';
+import 'package:fish_app/Services/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fish_app/add_fish_page.dart';
 import 'package:fish_app/user_page.dart';
@@ -7,7 +8,7 @@ import 'package:fish_app/home_page.dart';
 import 'package:fish_app/statistics_page.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
-
+import 'package:weather/weather.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -16,8 +17,9 @@ import 'package:fish_app/Services/database_service.dart';
 //import 'package:fl_chart/fl_chart.dart';
 void main() async  {
   runApp(MyApp());
-  Position position = await determinePosition();
-print(position);
+  WeatherService weatherService = WeatherService();
+  Weather? weather = await weatherService.GetWeatherOnline();
+  print(weather);
 }
 
 class MyApp extends StatelessWidget {
