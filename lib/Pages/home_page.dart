@@ -17,24 +17,46 @@ class _HomeTabState extends State<HomeTab> {
       message = 'Updated Home Tab Message!';
     });
   }
+  List<FishingSpotCard> generateCards()
+  {
+    List<FishingSpotCard> cards = [];
+    cards.add(FishingSpotCard());
+    cards.add(FishingSpotCard());
+    cards.add(FishingSpotCard());
+
+    return cards;
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            message,
-            style: TextStyle(fontSize: 24),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: updateMessage,
-            child: Text('Change Message'),
-          ),
-        ],
+        children: generateCards(),
       ),
     );
   }
 }
+
+
+class FishingSpotCard extends StatefulWidget
+{
+  @override
+  _FishingSpotCardState createState() => _FishingSpotCardState();
+
+
+}
+
+
+class _FishingSpotCardState extends State<FishingSpotCard>
+{
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Text('data');
+  }
+  }
+
+
