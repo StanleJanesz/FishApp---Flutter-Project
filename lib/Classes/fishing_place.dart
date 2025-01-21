@@ -1,7 +1,11 @@
-class Fishingplace {
-  String coordintes;
+
+import 'package:geolocator/geolocator.dart';
+
+class FishingSpot {
+  int id;
   String name;
-  Fishingplace()
-      : coordintes = "",
-        name = "lowisko";
+  double longitude;
+  double latitude;
+  FishingSpot({required this.longitude,required this.latitude, required this.name, required this.id});
+
 }

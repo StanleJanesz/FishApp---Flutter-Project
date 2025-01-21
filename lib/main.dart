@@ -1,11 +1,12 @@
 import 'package:fish_app/Classes/fish.dart';
+import 'package:fish_app/Pages/more_page.dart';
 import 'package:fish_app/Services/location_service.dart';
 import 'package:fish_app/Services/weather_service.dart';
 import 'package:flutter/material.dart';
-import 'package:fish_app/add_fish_page.dart';
-import 'package:fish_app/user_page.dart';
-import 'package:fish_app/home_page.dart';
-import 'package:fish_app/statistics_page.dart';
+import 'package:fish_app/Pages/add_fish_page.dart';
+import 'package:fish_app/Pages/user_page.dart';
+import 'package:fish_app/Pages/home_page.dart';
+import 'package:fish_app/Pages/statistics_page.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 import 'package:weather/weather.dart';
@@ -14,6 +15,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:fish_app/Services/database_service.dart';
+
 //import 'package:fl_chart/fl_chart.dart';
 void main() async  {
   runApp(MyApp());
@@ -53,8 +55,7 @@ class _HomePageState extends State<_HomePage> {
     TabData(tab: HomeTab(), label: 'Home', icon: Icons.home),
     TabData(tab: ProfilePage(), label: 'Profile', icon: Icons.person),
     TabData(tab: StatisticsPage(fishes : fishes, key :statisticPageKey ), label: 'Statistics', icon: Icons.bar_chart),
-    TabData(
-        tab: HomeTab(), label: 'More', icon: Icons.more_horiz),
+    TabData(tab: MorePage(), label: 'More', icon: Icons.more_horiz),
   ];
 
   void _onTabTapped(int index) {
@@ -77,7 +78,7 @@ class _HomePageState extends State<_HomePage> {
       if (fishes.isNotEmpty)
       fishes.add(fish);
       else {
-        final databseServis = DatabaseService();
+        final databseServis = DatabaseServiceFish();
         databseServis.addFish(fish);
         final test = await databseServis.getAll();
         print(test.length);

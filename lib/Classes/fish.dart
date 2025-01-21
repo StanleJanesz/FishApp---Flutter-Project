@@ -1,19 +1,18 @@
-class Fish {
-  int id;
-  int size;
-  FishType type;
-  DateTime date;
-  String catchedBy;
-  Fish()
-      : size = 0,
-        type = FishType(),
-        date = DateTime.now(),
-        catchedBy = "User",
-        id = 0;
-}
+import 'dart:ffi';
 
+class Fish {
+  int id; //
+  int size; //
+  int type; 
+  DateTime date; // 
+  String catchedBy; //
+  int spotId;
+  int baitId;    
+  int weatherId;    
+Fish({required this.id, required this.size, required this.type, required this.date, required this.catchedBy, required this.spotId, required this.baitId, required this.weatherId});
+}
 class FishType {
   String type;
   static final List<String> types = ['Okoń', 'Sum', 'Leszcz', 'Szczupak'];
-  FishType() : type = "Okoń";
+  FishType({required this.type});  
 }

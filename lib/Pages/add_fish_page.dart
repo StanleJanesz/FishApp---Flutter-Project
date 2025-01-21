@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fish_app/Classes/fish.dart';
 import 'package:fish_app/Services/database_service.dart';
+import 'package:fish_app/Widgets/number_picker.dart';
+import 'package:date_field/date_field.dart';
+import 'package:fish_app/Widgets/date_time_picker.dart';
+import 'package:fish_app/Widgets/search_choice_list.dart';
 class NewPage extends StatefulWidget {
   const NewPage({super.key});
 
@@ -12,61 +16,54 @@ class _NewPageState extends State<NewPage> {
   final _formKey = GlobalKey<FormState>(); // Global key for form state
   final TextEditingController _intController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
-  DateTime? pickedDate ;
+  DateTime? pickedDate;
   List<String> items = FishType.types;
   String? selectedItem;
-  Fish fish = Fish();
+  Fish fish = Fish(
+    id : 0,
+      size: 0,
+      date: DateTime.now(),
+      catchedBy: "user",
+      type: 0,
+      spotId: 0,
+      baitId: 0,
+      weatherId: 0,
+  );
 
-   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
-  Future<void> _selectDate(BuildContext context) async {
-    // Get the current date
-    DateTime initialDate = DateTime.now();
-    DateTime firstDate = DateTime(2000);
-    DateTime lastDate = DateTime(2101);
-    
-    // Show the date picker
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-    );
 
-    // If the user picked a date, update the controller with the formatted date
-    if (pickedDate != null && pickedDate != initialDate) {
-      this.pickedDate = pickedDate;
-      setState(() {
-        _dateController.text = "${pickedDate.toLocal()}".split(' ')[0]; // Format: YYYY-MM-DD
-      });
-    
-    }
-    }
 
   // This method validates and shows the input values
   void _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       // If the form is valid, show a dialog with the input values
-      final intInput = _intController.text;
+      final size = _intController.text;
       final textInput = _textController.text;
 
       // Optionally convert the int input to a number if needed
-      final intValue = int.tryParse(intInput);
-      fish.size = intValue ?? 0;
+      final intSize = int.tryParse(size);
+      fish.size = intSize ?? 0;
       fish.date = pickedDate ?? DateTime.now();
-      fish.catchedBy = textInput;
-      fish.type.type = selectedItem ?? "Unknown";
-           Navigator.pop(context,fish); // Go back to the previous screen after submission
-      final databseServis = DatabaseService();
+      fish.catchedBy = "user";
+      fish.type = 0;
+      fish.spotId = 0;
+      fish.baitId = 0; 
+      Navigator.pop(
+          context, fish); // Go back to the previous screen after submission
+      final databseServis = DatabaseServiceFish();
       databseServis.addFish(fish);
       final test = await databseServis.getAll();
       print(test.length);
     }
   }
 
+  bool checkboxValue = false;
   @override
   Widget build(BuildContext context) {
-    _dateController.text = "${DateTime.now().toLocal()}".split(' ')[0];
+    if (pickedDate == null) {
+      _dateController.text = "${DateTime.now().toLocal()}".split(' ')[0];
+    }
     return Scaffold(
       appBar: AppBar(title: Text('New Page')),
       body: Padding(
@@ -76,65 +73,39 @@ class _NewPageState extends State<NewPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Integer input field
-              TextFormField(
-                controller: _intController,
-                keyboardType: TextInputType.datetime, // Only numbers allowed
-                decoration: InputDecoration(
-                  labelText: 'Enter an Integer',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an integer';
-                  }
-                  final intValue = int.tryParse(value);
-                  if (intValue == null) {
-                    return 'Please enter a valid integer';
-                  }
-                  return null;
-                },
-              ),
+              Checkbox(
+                  value: checkboxValue,
+                  onChanged: (value) {
+                    setState(() {
+                      checkboxValue = value!;
+                    });
+                  }),
+             
+              FishSizeWidget(isSelected: checkboxValue,textController: _intController),
               SizedBox(height: 20),
-              // Text input field
-              TextFormField(
-                controller: _textController,
-                decoration: InputDecoration(
-                  labelText: 'Enter Text',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
+              Text('date'),
+              DateTimePicker(dateController: _dateController),
+              Text('type'),
+              SelectOptionsControl(options: optionsGenerator()),
+              Text('FsihingSpot'),
+              SelectOptionsControl(options: optionsGenerator()),
+              Text('weather'),
+              SelectOptionsControl(options: optionsGenerator()),
+              DropdownButton<String>(
+                value: selectedItem,
+                hint: Text('Select an item'),
+                items: items.map((String item) {
+                  return DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedItem = newValue;
+                  });
                 },
               ),
-              TextFormField(
-              controller: _dateController,
-              readOnly: true, // Disable manual editing
-              
-              decoration: InputDecoration(
-                labelText: 'Select a Date',
-                suffixIcon: Icon(Icons.calendar_today),
-              ),
-              onTap: () => _selectDate(context), // Trigger date picker when tapped
-            ),
-              DropdownButton<String>(
-          value: selectedItem,
-          hint: Text('Select an item'),
-          items: items.map((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Text(item),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedItem = newValue;
-            });
-          },
-        ),
               SizedBox(height: 20),
               // Submit button
               ElevatedButton(
@@ -146,5 +117,85 @@ class _NewPageState extends State<NewPage> {
         ),
       ),
     );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class FishSizeWidget extends StatefulWidget {
+  bool isSelected = false;
+  TextEditingController textController = TextEditingController(); 
+  FishSizeWidget({Key? key, required this.isSelected,required this.textController}) : super(key: key);
+  @override
+  _FishSizeWidgetState createState() => _FishSizeWidgetState();
+}
+
+class _FishSizeWidgetState extends State<FishSizeWidget> {
+  int _currentValue = 3;
+  
+  @override
+  Widget build(BuildContext context) {
+    if(!widget.isSelected)
+    {
+    return Column(   
+      children: <Widget>[
+        IntegerExample(   intController: widget.textController),    
+        Text('Current value: $_currentValue'),
+      ],
+    );
+    }
+    else
+    {
+      return  TextFormField(
+                controller: widget.textController,
+                keyboardType: TextInputType.datetime, // Only numbers allowed
+                decoration: InputDecoration(
+                  labelText: 'Enter an Fish Size',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Fish Size';
+                  }
+                  final intValue = int.tryParse(value);
+                  if (intValue == null) {
+                    return 'Please enter a valid integer';
+                  }
+                  return null;
+                },
+              );
+    }
   }
 }
