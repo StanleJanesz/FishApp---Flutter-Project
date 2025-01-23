@@ -1,4 +1,6 @@
 import 'package:fish_app/Classes/fishing_place.dart';
+import 'package:fish_app/Classes/fish.dart';
+import 'package:fish_app/Services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:select_field/select_field.dart';
 
@@ -16,20 +18,41 @@ class _HomeTabState extends State<HomeTab> {
 
   String message = 'Home Tab';
   List<FishingSpot> fishingSpots = [];
+  Map<int, List<Fish>> fishMap = {};
+
+  
+@override
+  void initState() {
+    super.initState();
+    getFromDatabse();
+  }
+void getFromDatabse() async {
+    await getFishMap();
+    DatabaseServiceFishingSpot databaseServiceFishingSpot = DatabaseServiceFishingSpot();
+    fishingSpots = await databaseServiceFishingSpot.getAll();
+    setState(() {
+      
+    });
+}
+
+Future<Map<int, List<Fish>>> getFishMap() async{
+    DatabaseServiceFish databaseServiceFish = DatabaseServiceFish();
+    for (final spot in fishingSpots) {
+      fishMap[spot.id] = await databaseServiceFish.getAllBySpotId(spot.id);
+    }
+    return fishMap;
+  }
 
 
 
-
-
-
-
-  List<FishingSpotCard> generateCards()
+  List<FishingSpotCard> generateCards() 
   {
+    getFromDatabse();
     List<FishingSpotCard> cards = [];
-    cards.add(FishingSpotCard());
-    cards.add(FishingSpotCard());
-    cards.add(FishingSpotCard());
-
+    for (final spot in fishingSpots)
+    {
+      cards.add(FishingSpotCard(fishingSpot: spot, fishList: fishMap[spot.id] ?? []));
+    }
     return cards;
   }
 
@@ -45,9 +68,9 @@ class _HomeTabState extends State<HomeTab> {
     
      Center(
       child: ListView(
-        itemExtent: 200,
+        
         scrollDirection: Axis.vertical,
-        children: generateCards(),
+        children:  generateCards(),
       ),
     ));
   }
@@ -56,8 +79,9 @@ class _HomeTabState extends State<HomeTab> {
 
 class FishingSpotCard extends StatefulWidget
 {
-  const FishingSpotCard({super.key});
-
+  final FishingSpot fishingSpot;
+  final List<Fish> fishList;
+  const FishingSpotCard({super.key, required this.fishingSpot, required this.fishList});
   @override
   _FishingSpotCardState createState() => _FishingSpotCardState();
 
@@ -74,50 +98,174 @@ class _FishingSpotCardState extends State<FishingSpotCard>
     return GestureDetector(
       onTap: () {
         _isSelected = !_isSelected;
-        print('Card Tapped');
         setState(() {
-          
         });
       },
-      child: Container(
+      child: selectState(_isSelected),
+    );
+  }
+
+
+
+  Widget selectState(bool isSelected)
+  {
+    if(!isSelected)
+    {
+      return Container(
         margin: EdgeInsets.all(10),
         child: Card(
+          
           child: Column(
             children: <Widget>[
-              Image.asset('assets/images/fishing_spot.jpg'),
+              Image.network('https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain'),
               Text('Fishing Spot Name'),
-              Text('Fishing Spot Description'),
-              Text('Fishing Spot Description'),
+              Text(widget.fishingSpot.name),
+              Text(widget.fishList.length.toString() + ' Fish'),
               Text('Fishing Spot Description'),
               Text('Fishing Spot Location'),
               Text('Fishing Spot Rating'),
-              selectState( _isSelected),
               
             ],
           ),
         ),
-      ),
-    );
-  }
-  Widget selectState(bool isSelected)
-  {
-    if(isSelected)
-    {
-      return Container(
-        color: Colors.blue,
-        child: Text('Selected'),
       );
     }
     else
     {
       return Container(
-        color: Colors.white,
-      );
+        height: 600,
+      margin: EdgeInsets.all(10),
+      child: 
+      Card( 
+        child: Padding(padding: EdgeInsets.all(10),
+        
+        child : Scaffold(
+        backgroundColor: Color.fromARGB(0, 33, 33, 175),
+      appBar: AppBar(                                                                                                                                                                     
+        title: Text('Fishing Spot Hisotry'),
+      ),
+      
+      
+     body: Container(
+       margin: EdgeInsets.all(5),
+      child: ListView(
+        
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        children: generateFishHistory(),
+      ),
+    ),
+      ),
+        ),
+      ),
+    );
     }
   }
 
+  List<Widget> generateFishHistory()
+  {
+    var map =  mapFish();
+    List<Widget> fishHistory = [];
+    fishHistory.add(Text('Fish History'));
+    for (final fish in map.keys)
+    {
+      fishHistory.add(Text(fish));
+      fishHistory.add(Text(''));
+      for (final data in map[fish]!)
+      {
+        fishHistory.add(FishDetailsCard(fish: data));
+      }
+    }
+    return fishHistory;                                                 
+  }
+  Map<String,List<Fish>> mapFish()
+  {
+    Map<String,List<Fish>> fishMap = {};
+    for (final fish in widget.fishList)
+    {
+      if(fishMap.containsKey(fish.type.toString()))
+      {
+        fishMap[fish.type.toString()]!.add(fish);
+      }
+      else
+      {
+        fishMap[fish.type.toString()] = [fish];
+      }
+    }
+    return fishMap;
+  }
+}
+class HistoryTab extends StatelessWidget {
+  const HistoryTab({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return  Center(
+      child: Container(
+        height: 200,
+        child:  ListView(
+          itemExtent: double.infinity,
   
+      ),),
+      
+      );
+    
+  }
 }
 
 
 
+
+///////////////////////////////////////////////
+class FishDetailsCard extends StatelessWidget {
+  final Fish fish;
+  
+  const FishDetailsCard({
+    Key? key,
+    required this.fish,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Fish #${fish.id}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            _buildDetail('Size', '${fish.size} cm'),
+            _buildDetail('Type', '${fish.type}'),
+            _buildDetail('Date', '${fish.date.day}/${fish.date.month}/${fish.date.year}'),
+            _buildDetail('Caught By', fish.catchedBy),
+            _buildDetail('Spot', '${fish.spotId}'),
+            _buildDetail('Bait', '${fish.baitId}'),
+            _buildDetail('Weather', '${fish.weatherId}'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetail(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Text(
+            '$label: ',
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          Text(value),
+        ],
+      ),
+    );
+  }
+}

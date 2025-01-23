@@ -193,6 +193,76 @@ class DatabaseServiceFish implements DatabaseService
         )
     ];
   }
+  final List<String> filterQueryOptions = ['type = ?', 'spotId = ?', 'baitId = ?'];
+  Future<List<Fish>> getByFilter(List<int> filters) async
+  {
+    final db = await database  ;
+    List<String> SelectedQueryOptions = [];
+    List<int> SelectedQueryValues = [];
+    for (int i = 0; i < filters.length; i++)
+    {
+      if (filters[i] > 0)
+      {
+        SelectedQueryOptions.add(filterQueryOptions[i]);
+        SelectedQueryValues.add(filters[i]);
+      }
+    }
+    if (SelectedQueryOptions.isEmpty)
+    {
+      return getAll();
+    }
+    final List<Map<String, Object?>> fishMaped = await db.rawQuery('SELECT * FROM fishes WHERE ${SelectedQueryOptions.join(' AND ')}', SelectedQueryValues);
+    return [
+      for (final {
+      'id': id as int,
+      'size': size as int,
+      'type': type as int,
+      'date': date as String,
+      'catchedBy': catchedBy as String,
+      'spotId': spotId as int,
+      'baitId': baitId as int,
+      'weatherId': weatherId as int,
+      } in fishMaped)
+        Fish(
+          id: id,
+          size: size,
+          type: type,
+          date: DateTime.parse(date),
+          catchedBy: catchedBy,
+          spotId: spotId,
+          baitId: baitId,
+          weatherId: weatherId,
+        )
+    ];
+  }
+ Future<List<Fish>> getAllBySpotId(int id) async 
+ {
+  final db = await database  ;
+
+    final List<Map<String, Object?>> fishMaped = await db.rawQuery('SELECT * FROM fishes WHERE spotId = ?', [id]);
+    return [
+      for (final {
+      'id': id as int,
+      'size': size as int,
+      'type': type as int,
+      'date': date as String,
+      'catchedBy': catchedBy as String,
+      'spotId': spotId as int,
+      'baitId': baitId as int,
+      'weatherId': weatherId as int,
+      } in fishMaped)
+        Fish(
+          id: id,
+          size: size,
+          type: type,
+          date: DateTime.parse(date),
+          catchedBy: catchedBy,
+          spotId: spotId,
+          baitId: baitId,
+          weatherId: weatherId,
+        )
+    ];
+ }
 }
 
 class DatabaseServiceFishType implements DatabaseService

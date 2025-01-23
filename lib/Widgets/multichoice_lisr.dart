@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 class MultiSelectOptionsControl<String> extends StatefulWidget {
   final List<Option<String>> options;
 
+
+ final MultiSelectFieldMenuController<String> menuController;
+
   const MultiSelectOptionsControl({
     super.key,
     required this.options,
+    required this.menuController,
   });
 
   @override
@@ -14,8 +18,8 @@ class MultiSelectOptionsControl<String> extends StatefulWidget {
       _MultiSelectOptionsControlState<String>();
 }
 
-class _MultiSelectOptionsControlState<String>
-    extends State<MultiSelectOptionsControl<String>> {
+class _MultiSelectOptionsControlState<String> extends State<MultiSelectOptionsControl<String>> {
+
   late final List<Option<String>> initalOptions;
   late final MultiSelectFieldMenuController<String> menuController;
 
@@ -44,16 +48,12 @@ class _MultiSelectOptionsControlState<String>
   @override
   void initState() {
     super.initState();
-    initalOptions = widget.options.sublist(1, 3);
-    menuController = MultiSelectFieldMenuController(
-      isExpanded: true,
-      initalOptions: initalOptions,
-    );
+    menuController = widget.menuController;
   }
 
   @override
   void dispose() {
-    menuController.dispose();
+
     super.dispose();
   }
 

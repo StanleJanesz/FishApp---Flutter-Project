@@ -6,6 +6,8 @@ import 'package:date_field/date_field.dart';
 import 'package:fish_app/Widgets/date_time_picker.dart';
 import 'package:fish_app/Widgets/search_choice_list.dart';
 import 'package:fish_app/widgets/fish_type_picker.dart';
+import 'package:fish_app/widgets/fishing_spot_picker.dart';
+import 'package:select_field/select_field.dart';
 class NewPage extends StatefulWidget {
   const NewPage({super.key});
 
@@ -15,8 +17,9 @@ class NewPage extends StatefulWidget {
 
 class _NewPageState extends State<NewPage> {
   final _formKey = GlobalKey<FormState>(); // Global key for form state
+  SelectFieldMenuController<int> typeController = SelectFieldMenuController<int>();
+  SelectFieldMenuController<int> spotController = SelectFieldMenuController<int>();
   final TextEditingController _intController = TextEditingController();
-  final TextEditingController _textController = TextEditingController();
   DateTime? pickedDate;
   List<String> items = FishType.types;
   String? selectedItem;
@@ -40,20 +43,28 @@ class _NewPageState extends State<NewPage> {
     if (_formKey.currentState?.validate() ?? false) {
       // If the form is valid, show a dialog with the input values
       final size = _intController.text;
-      final textInput = _textController.text;
 
       // Optionally convert the int input to a number if needed
       final intSize = int.tryParse(size);
+      final type = typeController.selectedOption?.value ?? 0;
+      final spot = spotController.selectedOption?.value ?? 0;
       fish.size = intSize ?? 0;
       fish.date = pickedDate ?? DateTime.now();
       fish.catchedBy = "user";
-      fish.type = 0;
-      fish.spotId = 0;
+      fish.type = type;
+      fish.spotId = spot;
       fish.baitId = 0; 
+      print(spot);
+      DatabaseServiceFish databaseServiceFish = DatabaseServiceFish();
+
+       
+
       Navigator.pop(
           context, fish); // Go back to the previous screen after submission
       final databseServis = DatabaseServiceFish();
-      databseServis.addFish(fish);
+      await databseServis.addFish(fish);
+      List<Fish> fff= await databaseServiceFish.getAllBySpotId(spot);
+      print(fff.length);
       final test = await databseServis.getAll();
       print(test.length);
     }
@@ -87,8 +98,8 @@ class _NewPageState extends State<NewPage> {
               Text('date'),
               DateTimePicker(dateController: _dateController),
               Text('type'),
-              FishTypePicker(),
-             
+              FishTypePicker(menuController: typeController),   
+              FishingSpotPicker(menuController: spotController),
               SizedBox(height: 20),
               // Submit button
               ElevatedButton(
@@ -163,9 +174,9 @@ class _FishSizeWidgetState extends State<FishSizeWidget> {
     {
       return  TextFormField(
                 controller: widget.textController,
-                keyboardType: TextInputType.datetime, // Only numbers allowed
+                keyboardType: TextInputType.number, // Only numbers allowed
                 decoration: InputDecoration(
-                  labelText: 'Enter an Fish Size',
+                  labelText: 'Enter an Fish Size',  
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {

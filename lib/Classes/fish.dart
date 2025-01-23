@@ -16,3 +16,6 @@ class FishType {
   static final List<String> types = ['Okoń', 'Sum', 'Leszcz', 'Szczupak'];
   FishType({required this.type, required this.id});  
 }
+  
+
+  

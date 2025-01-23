@@ -1,32 +1,33 @@
   import 'package:fish_app/Classes/fish.dart';
+import 'package:fish_app/Classes/fishing_place.dart';
 import 'package:select_field/select_field.dart';
 import 'package:flutter/material.dart';
 import 'package:fish_app/Services/database_service.dart';
-class FishTypePicker extends StatefulWidget {
-  
+class FishingSpotPicker extends StatefulWidget {
+
 final SelectFieldMenuController<int> menuController;
- FishTypePicker({required this.menuController});
+ FishingSpotPicker({required this.menuController});
 
   Future<List<Option<int>>> GetOptions() async
   {
-    var databaseService = DatabaseServiceFishType();
-    var fishTypes = await databaseService.getAll();
+    var databaseService = DatabaseServiceFishingSpot();
+    var fishingSpots = await databaseService.getAll();
     int i = 1;
     return [
-      for (final fishType in fishTypes)
-        Option<int>(label: fishType.type,value: fishType.id ) 
+      for (final fishingSpot in fishingSpots)
+        Option<int>(label: fishingSpot.name,value: fishingSpot.id ) 
     ];
   }
 
 
 
   @override
-  State<FishTypePicker> createState() =>
-      _FishTypePickerState();
+  State<FishingSpotPicker> createState() =>
+      _FishingSpotPickerState();
 }
 
-class _FishTypePickerState
-    extends State<FishTypePicker> {
+class _FishingSpotPickerState
+    extends State<FishingSpotPicker> {
   late  Option<int> initalOption = Option(label: 'Okoń',value: 1);
   late final SelectFieldMenuController<int> menuController;
   late  List<Option<int>> options =[];
