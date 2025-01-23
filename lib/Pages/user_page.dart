@@ -46,12 +46,36 @@ class _ProfilePageState extends State<ProfilePage> {
           ProfileInfoCard(),
           BorderedElevatedBox(
             imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
-            text:  'jestem koza ',
+            text:  'favorite fishing spot',
+            otherText: 'Location 1',
           ),
           BorderedElevatedBox(
             imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
-            text:  'jestem koza ',
+            text:  'Bigest fish',
+            otherText: 'Fish 1 (100cm)',
           ),
+          BorderedElevatedBox(
+            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
+            text:  'favorite fish',
+            otherText: 'Fish 1 (32 times)',
+          ),
+          BorderedElevatedBox(
+            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
+            text:  'last fish',
+            otherText: 'Fish 145 (12.12.2021)',
+          ),
+          BorderedElevatedBox(
+            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
+            text:  'favorite fish',
+            otherText: 'Fish 1 (32 times)',
+          ),
+          BorderedElevatedBox(
+            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
+            text:  'least often fish',
+            otherText: 'Fish 12 (1 times)',
+          ),
+
+
 
         ],
       ) ,
@@ -90,12 +114,17 @@ class _ProfileInfoCardState extends State<ProfileInfoCard>
         ),
         child: Row(
           children: [
-            Icon(Icons.ice_skating),
+            ConstrainedBox(constraints: BoxConstraints(maxWidth: 100, maxHeight: 100), child:
+            Image.network('https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
+                height: 100,
+                width: 100,
+                fit: BoxFit.cover,)),
             Column(
               children: [
-                 Text('Imie: imie czu cos'),
-                 Text('Imie: imie czu cos'),
-                 Text('Imie: imie czu cos'),
+                 Text('Name: User Name'),
+                 Text('Other: Other'),
+                 Text('Other: Other'),
+                 Text('Other: Other'),
               ],
             )
           ],
@@ -110,11 +139,13 @@ class _ProfileInfoCardState extends State<ProfileInfoCard>
 class BorderedElevatedBox extends StatefulWidget {
   final String imageUrl;
   final String text;
+  final String otherText;
 
   const BorderedElevatedBox({
     super.key,
     required this.imageUrl,
     required this.text,
+    required this.otherText,
   });
 
   @override
@@ -167,7 +198,7 @@ class _BorderedElevatedBoxState extends State<BorderedElevatedBox> {
             ),
             const SizedBox(height: 10),
             Text(
-              widget.text,
+              _isSelected ?  widget.otherText : widget.text,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),

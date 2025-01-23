@@ -26,10 +26,6 @@ class StatisticsPageState extends State<StatisticsPage> {
   late final  List<FilterData> filters ;
   int valueType = 0;
   int chartType = 0;
-//  List<bool> filtersSelected = [false, false, false];
- // List<int> filterValues = [0,0,0];
- // final SelectFieldMenuController<int> fishingSpotController = SelectFieldMenuController<int>();
-  //final SelectFieldMenuController<int> fishTypeController = SelectFieldMenuController<int>();
   final SelectFieldMenuController<int> groupController = SelectFieldMenuController<int>();
   final MultiSelectFieldMenuController<int> optionSeletionController = MultiSelectFieldMenuController<int>();
 
@@ -108,9 +104,14 @@ class StatisticsPageState extends State<StatisticsPage> {
                  shrinkWrap: true,
                  
                 children: [
-                  Text('Select fishing spot'),
+                  Padding(padding: EdgeInsets.all(10) ,
+                  child: Text('Select Type of grouping'),
+                  ),
                   
                   GroupByWidget(menuController: groupController),
+                  Padding(padding: EdgeInsets.all(10) ,
+                  child: Text('Select filters'),
+                  ),
                   MultiSelectOptionsControl(
                     options: createFilterOptions(),
                     menuController:optionSeletionController ,
@@ -149,6 +150,7 @@ class StatisticsPageState extends State<StatisticsPage> {
     {
       if (filter.isSelected)
       {
+        selected.add( Text("Select ${filter.label}"));
         selected.add( filter.widget);
       }
     }
@@ -503,9 +505,7 @@ class _ColumnChartState extends State<ColumnChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Sales Column Chart')),
-      body: Padding(
+    return  Padding(
         padding: const EdgeInsets.all(16.0),
         child: BarChart(
           BarChartData(
@@ -531,7 +531,6 @@ class _ColumnChartState extends State<ColumnChart> {
             ),
           ),
         ),
-      ),
     );
   }
   List<BarChartGroupData> generateBarGroups()

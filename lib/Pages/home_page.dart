@@ -117,7 +117,10 @@ class _FishingSpotCardState extends State<FishingSpotCard>
           
           child: Column(
             children: <Widget>[
-              Image.network('https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain'),
+               Image.network('https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
+                height: 100,
+                width: 100,
+                fit: BoxFit.cover,),
               Text('Fishing Spot Name'),
               Text(widget.fishingSpot.name),
               Text(widget.fishList.length.toString() + ' Fish'),
@@ -166,14 +169,39 @@ class _FishingSpotCardState extends State<FishingSpotCard>
   {
     var map =  mapFish();
     List<Widget> fishHistory = [];
-    fishHistory.add(Text('Fish History'));
-    for (final fish in map.keys)
+    widget.fishList.sort((a, b) => a.date.compareTo(b.date));
+    Map<String,List<Fish>> byDates  = {};
+    for (final fish in widget.fishList)
     {
-      fishHistory.add(Text(fish));
-      fishHistory.add(Text(''));
-      for (final data in map[fish]!)
+      String date = "${fish.date.day}.${fish.date.month}.${fish.date.year}";  
+      if(byDates.containsKey(date))
       {
-        fishHistory.add(FishDetailsCard(fish: data));
+        byDates[date]!.add(fish);
+      }
+      else
+      {
+        byDates[date] = [fish];
+      }
+    }
+    for (final date in byDates.keys)
+    {
+      fishHistory.add(
+        Container(
+  margin: EdgeInsets.all(5),
+  decoration: BoxDecoration(
+    color: Colors.blue,
+    borderRadius: BorderRadius.circular(5),
+  ),
+  child:Center(
+    child: Text(
+    date,
+    style: TextStyle(color: Colors.white),
+  ),
+)));
+
+      for (final fish in byDates[date]!)
+      {
+        fishHistory.add(FishDetailsCard(fish: fish));
       }
     }
     return fishHistory;                                                 
@@ -244,8 +272,6 @@ class FishDetailsCard extends StatelessWidget {
             _buildDetail('Size', '${fish.size} cm'),
             _buildDetail('Type', '${fish.type}'),
             _buildDetail('Date', '${fish.date.day}/${fish.date.month}/${fish.date.year}'),
-            _buildDetail('Caught By', fish.catchedBy),
-            _buildDetail('Spot', '${fish.spotId}'),
             _buildDetail('Bait', '${fish.baitId}'),
             _buildDetail('Weather', '${fish.weatherId}'),
           ],
