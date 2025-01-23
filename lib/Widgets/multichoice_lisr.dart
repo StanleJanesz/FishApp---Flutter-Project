@@ -1,11 +1,11 @@
 import 'package:select_field/select_field.dart';
 import 'package:flutter/material.dart';
 
-class MultiSelectOptionsControl<String> extends StatefulWidget {
-  final List<Option<String>> options;
+class MultiSelectOptionsControl<int> extends StatefulWidget {
+  final List<Option<int>> options;
 
 
- final MultiSelectFieldMenuController<String> menuController;
+ final MultiSelectFieldMenuController<int> menuController;
 
   const MultiSelectOptionsControl({
     super.key,
@@ -14,22 +14,22 @@ class MultiSelectOptionsControl<String> extends StatefulWidget {
   });
 
   @override
-  State<MultiSelectOptionsControl<String>> createState() =>
-      _MultiSelectOptionsControlState<String>();
+  State<MultiSelectOptionsControl<int>> createState() =>
+      _MultiSelectOptionsControlState<int>();
 }
 
-class _MultiSelectOptionsControlState<String> extends State<MultiSelectOptionsControl<String>> {
+class _MultiSelectOptionsControlState<int> extends State<MultiSelectOptionsControl<int>> {
 
-  late final List<Option<String>> initalOptions;
-  late final MultiSelectFieldMenuController<String> menuController;
+  late final List<Option<int>> initalOptions;
+  late final MultiSelectFieldMenuController<int> menuController;
 
-  void onOptionSelected(List<Option<String>> options) {
+  void onOptionSelected(List<Option<int>> options) {
     setState(() {
       menuController.selectedOptions = options;
     });
   }
 
-  void onOptionRemoved(Option<String> option) {
+  void onOptionRemoved(Option<int> option) {
     final options = menuController.selectedOptions;
     options.remove(option);
     setState(() {
@@ -61,7 +61,7 @@ class _MultiSelectOptionsControlState<String> extends State<MultiSelectOptionsCo
   Widget build(BuildContext context) {
     return Column(
       children: [
-        MultiSelectField<String>(
+        MultiSelectField<int>(
           options: widget.options,
           fieldText: 'Select fruit',
           onTap: onTap,
