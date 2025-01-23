@@ -61,6 +61,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
 class ProfileInfoCard extends StatefulWidget
 {
+  const ProfileInfoCard({super.key});
+
   @override
   State<ProfileInfoCard> createState() => _ProfileInfoCardState();
 
@@ -110,10 +112,10 @@ class BorderedElevatedBox extends StatefulWidget {
   final String text;
 
   const BorderedElevatedBox({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.text,
-  }) : super(key: key);
+  });
 
   @override
   State<BorderedElevatedBox> createState() => _BorderedElevatedBoxState();

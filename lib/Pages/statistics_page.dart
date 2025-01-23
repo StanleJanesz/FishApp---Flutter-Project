@@ -4,7 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 class  StatisticsPage extends StatefulWidget {
   final List<Fish?> fishes;
   @override
- StatisticsPageState createState() => StatisticsPageState(fishes : this.fishes);
+ StatisticsPageState createState() => StatisticsPageState(fishes : fishes);
  const StatisticsPage({super.key, required this.fishes});
 }
 
@@ -15,7 +15,7 @@ class StatisticsPageState extends State<StatisticsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChartPage(fishes :this.fishes);
+    return ChartPage(fishes :fishes);
   }
 
 

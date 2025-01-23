@@ -5,6 +5,7 @@ import 'package:fish_app/Widgets/number_picker.dart';
 import 'package:date_field/date_field.dart';
 import 'package:fish_app/Widgets/date_time_picker.dart';
 import 'package:fish_app/Widgets/search_choice_list.dart';
+import 'package:fish_app/widgets/fish_type_picker.dart';
 class NewPage extends StatefulWidget {
   const NewPage({super.key});
 
@@ -86,26 +87,8 @@ class _NewPageState extends State<NewPage> {
               Text('date'),
               DateTimePicker(dateController: _dateController),
               Text('type'),
-              SelectOptionsControl(options: optionsGenerator()),
-              Text('FsihingSpot'),
-              SelectOptionsControl(options: optionsGenerator()),
-              Text('weather'),
-              SelectOptionsControl(options: optionsGenerator()),
-              DropdownButton<String>(
-                value: selectedItem,
-                hint: Text('Select an item'),
-                items: items.map((String item) {
-                  return DropdownMenuItem<String>(
-                    value: item,
-                    child: Text(item),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedItem = newValue;
-                  });
-                },
-              ),
+              FishTypePicker(),
+             
               SizedBox(height: 20),
               // Submit button
               ElevatedButton(
@@ -157,13 +140,13 @@ class _NewPageState extends State<NewPage> {
 class FishSizeWidget extends StatefulWidget {
   bool isSelected = false;
   TextEditingController textController = TextEditingController(); 
-  FishSizeWidget({Key? key, required this.isSelected,required this.textController}) : super(key: key);
+  FishSizeWidget({super.key, required this.isSelected,required this.textController});
   @override
   _FishSizeWidgetState createState() => _FishSizeWidgetState();
 }
 
 class _FishSizeWidgetState extends State<FishSizeWidget> {
-  int _currentValue = 3;
+  final int _currentValue = 3;
   
   @override
   Widget build(BuildContext context) {

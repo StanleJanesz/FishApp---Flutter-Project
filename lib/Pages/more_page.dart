@@ -5,6 +5,8 @@ import 'package:fish_app/Classes/bait.dart';
 import 'package:fish_app/Classes/fish.dart';
 import 'package:fish_app/Classes/fishing_place.dart';
 class MorePage extends StatefulWidget {
+  const MorePage({super.key});
+
   @override
   _MorePageState createState() => _MorePageState();
 }
@@ -43,7 +45,8 @@ class _MorePageState extends State<MorePage> {
             ),
              ElevatedButton(
               onPressed: () {
-                // Add your onPressed code here!
+                DatabaseServiceFishType databaseServiceFishType = DatabaseServiceFishType();
+                databaseServiceFishType.addFishType(FishType(type: 'Fish Type 1',id: 1));
               },
               child: Text('Button 2'),
             ),

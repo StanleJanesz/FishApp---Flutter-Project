@@ -1,5 +1,4 @@
 
-import 'package:geolocator/geolocator.dart';
 
 class FishingSpot {
   int id;

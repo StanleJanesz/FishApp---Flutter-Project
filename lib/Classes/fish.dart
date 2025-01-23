@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 class Fish {
   int id; //
@@ -12,7 +11,8 @@ class Fish {
 Fish({required this.id, required this.size, required this.type, required this.date, required this.catchedBy, required this.spotId, required this.baitId, required this.weatherId});
 }
 class FishType {
+  int id;
   String type;
   static final List<String> types = ['Okoń', 'Sum', 'Leszcz', 'Szczupak'];
-  FishType({required this.type});  
+  FishType({required this.type, required this.id});  
 }

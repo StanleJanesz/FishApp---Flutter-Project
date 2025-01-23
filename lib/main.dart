@@ -75,9 +75,9 @@ class _HomePageState extends State<_HomePage> {
     
     if (result != null) {
       Fish fish = result;
-      if (fishes.isNotEmpty)
-      fishes.add(fish);
-      else {
+      if (fishes.isNotEmpty) {
+        fishes.add(fish);
+      } else {
         final databseServis = DatabaseServiceFish();
         databseServis.addFish(fish);
         final test = await databseServis.getAll();

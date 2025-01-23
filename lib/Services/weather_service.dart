@@ -4,7 +4,7 @@ import 'package:fish_app/Services/location_service.dart';
 
 class WeatherService
 {
-  static String _keys = "177eb4d07afbea51309a0446083410ce";
+  static final String _keys = "177eb4d07afbea51309a0446083410ce";
   double latitude = 0;
   double longitude = 0;
   final WeatherFactory weatherFactory;

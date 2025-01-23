@@ -10,6 +10,26 @@ abstract class DatabaseService{
  Future<Database> get database;
  Future<Database>  _openDatabase  () ;
 
+static Future<void> onCreate(Database  database) async {
+  var db =  database;
+  await db.execute(
+    'CREATE TABLE fishingSpotTable(id INTEGER PRIMARY KEY, name TEXT, latitude DOUBLE, longitude DOUBLE)',
+  );
+  await db.execute(
+    'CREATE TABLE fishes(id INTEGER PRIMARY KEY, size INTEGER, type INTEGER, date DATETIME, catchedBy TEXT, spotId INTEGER, baitId INTEGER, weatherId INTEGER)',
+  );
+  await db.execute(
+    'CREATE TABLE fishType(id INTEGER PRIMARY KEY, name TEXT)',
+  );
+  await db.execute(
+    'CREATE TABLE bait(id INTEGER PRIMARY KEY, name TEXT, type INTEGER,weight DOUBLE)',
+  );
+  await db.execute(
+    'CREATE TABLE baitType(id INTEGER PRIMARY KEY, name TEXT)',
+  );
+  
+
+}
 
   //Future<bool> add(Object object) ;
 
@@ -26,11 +46,9 @@ abstract class DatabaseService{
   Future<Database>  _openDatabase  () async{
       WidgetsFlutterBinding.ensureInitialized();
     return openDatabase(
-      join(await getDatabasesPath(), 'fish_app_database.db'),
+      join(await getDatabasesPath(), 'fish_app_database3.db'),
       onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE fishingSpotTable(id INTEGER PRIMARY KEY, name TEXT, latitude DOUBLE, longitude DOUBLE)',
-        );
+        return DatabaseService.onCreate(db);
       },
 
       version: 1,
@@ -102,24 +120,23 @@ class DatabaseServiceFish implements DatabaseService
 {
   @override
   late Future<Database> database;
+  
   @override
   Future<Database>  _openDatabase  () async
  {
 
    WidgetsFlutterBinding.ensureInitialized();
    return openDatabase(
-       join(await getDatabasesPath(), 'fish_app_database.db'),
+       join(await getDatabasesPath(), 'fish_app_database3.db'),
    onCreate: (db, version) {
- return db.execute(
- 'CREATE TABLE fish(id INTEGER PRIMARY KEY, size INTEGER, type INTEGER, date DATETIME, catchedBy TEXT, spotId INTEGER, baitId INTEGER, weatherId INTEGER)',
- );
+ return DatabaseService.onCreate(db);
  },
 
    version: 1,
    );
 
  }
-  
+
 
    DatabaseServiceFish() 
    {
@@ -131,7 +148,7 @@ class DatabaseServiceFish implements DatabaseService
     final db = await database;
 
     await db.insert(
-      'fish',
+      'fishes',
       {
         'size' : fish.size,
         'type' : fish.type,
@@ -151,7 +168,7 @@ class DatabaseServiceFish implements DatabaseService
 
     final db = await database  ;
 
-    final List<Map<String, Object?>> fishMaped = await db.query('fish');
+    final List<Map<String, Object?>> fishMaped = await db.query('fishes');
 
     return [
       for (final {
@@ -191,11 +208,9 @@ class DatabaseServiceFishType implements DatabaseService
 
     WidgetsFlutterBinding.ensureInitialized();
     return openDatabase(
-      join(await getDatabasesPath(), 'fish_app_database.db'),
+      join(await getDatabasesPath(), 'fish_app_database3.db'),
       onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE fishType(id INTEGER PRIMARY KEY, name TEXT)',
-        );
+        return DatabaseService.onCreate(db);
       },
 
       version: 1,
@@ -209,7 +224,7 @@ class DatabaseServiceFishType implements DatabaseService
     await db.insert(
       'fishType',
       {
-        'type' : fishType.type,
+        'name' : fishType.type,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -226,8 +241,9 @@ class DatabaseServiceFishType implements DatabaseService
     return [
       for (final {
       'name': type as String,
+      'id': id as int,
       } in fishTypeMaped)
-        FishType(type: type)
+        FishType(type: type,id: id) 
     ];
   }
 }
@@ -246,11 +262,9 @@ class DatabaseServiceBait implements DatabaseService
 
     WidgetsFlutterBinding.ensureInitialized();
     return openDatabase(
-      join(await getDatabasesPath(), 'fish_app_database.db'),
+      join(await getDatabasesPath(), 'fish_app_database3.db'),
       onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE bait(id INTEGER PRIMARY KEY, name TEXT, type INTEGER,weight DOUBLE)',
-        );
+        return DatabaseService.onCreate(db);
       },
 
       version: 1,
@@ -308,11 +322,9 @@ class DatabaseServiceBaitType implements DatabaseService
 
     WidgetsFlutterBinding.ensureInitialized();
     return openDatabase(
-      join(await getDatabasesPath(), 'fish_app_database.db'),
+      join(await getDatabasesPath(), 'fish_app_database3.db'),
       onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE baitType(id INTEGER PRIMARY KEY, name TEXT)',
-        );
+        return DatabaseService.onCreate(db);
       },
 
       version: 1,

@@ -56,6 +56,8 @@ class _HomeTabState extends State<HomeTab> {
 
 class FishingSpotCard extends StatefulWidget
 {
+  const FishingSpotCard({super.key});
+
   @override
   _FishingSpotCardState createState() => _FishingSpotCardState();
 

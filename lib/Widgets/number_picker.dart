@@ -3,7 +3,7 @@ import 'package:numberpicker/numberpicker.dart';
 
 class IntegerExample extends StatefulWidget {
   TextEditingController  intController = TextEditingController();
-  IntegerExample({Key? key, required this.intController}) : super(key: key);
+  IntegerExample({super.key, required this.intController});
   @override
   _IntegerExampleState createState() => _IntegerExampleState();
 }
