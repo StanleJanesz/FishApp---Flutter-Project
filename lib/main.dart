@@ -1,27 +1,15 @@
 import 'package:fish_app/Classes/fish.dart';
-import 'package:fish_app/Pages/more_page.dart';
-import 'package:fish_app/Services/location_service.dart';
-import 'package:fish_app/Services/weather_service.dart';
+import 'package:fish_app/Pages/tabs/more_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fish_app/Pages/add_fish_page.dart';
-import 'package:fish_app/Pages/user_page.dart';
-import 'package:fish_app/Pages/home_page.dart';
-import 'package:fish_app/Pages/statistics_page.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:fish_app/Pages/tabs/user_page.dart';
+import 'package:fish_app/Pages/tabs/home_page.dart';
+import 'package:fish_app/Pages/tabs/statistics_page.dart';
 import 'dart:async';
-import 'package:weather/weather.dart';
-import 'package:flutter/widgets.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:fish_app/Services/database_service.dart';
 
 //import 'package:fl_chart/fl_chart.dart';
-void main() async  {
+void main() async {
   runApp(MyApp());
-  WeatherService weatherService = WeatherService();
-  Weather? weather = await weatherService.GetWeatherOnline();
-  print(weather);
 }
 
 class MyApp extends StatelessWidget {
@@ -47,14 +35,17 @@ class _HomePage extends StatefulWidget {
 class _HomePageState extends State<_HomePage> {
   int _currentIndex = 0;
   static List<Fish> fishes = [];
-    // Key to access the state of Tab 1 and Tab 2
-  static final  GlobalKey<StatisticsPageState> statisticPageKey = GlobalKey();
- // final GlobalKey<Tab2State> tab2Key = GlobalKey();
+  // Key to access the state of Tab 1 and Tab 2
+  static final GlobalKey<StatisticsPageState> statisticPageKey = GlobalKey();
+  // final GlobalKey<Tab2State> tab2Key = GlobalKey();
   // List of tabs and their respective labels and icons
   final List<TabData> _tabs = [
     TabData(tab: HomeTab(), label: 'Home', icon: Icons.home),
     TabData(tab: ProfilePage(), label: 'Profile', icon: Icons.person),
-    TabData(tab: StatisticsPage(fishes : fishes, key :statisticPageKey ), label: 'Statistics', icon: Icons.bar_chart),
+    TabData(
+        tab: StatisticsPage(fishes: fishes, key: statisticPageKey),
+        label: 'Statistics',
+        icon: Icons.bar_chart),
     TabData(tab: MorePage(), label: 'More', icon: Icons.more_horiz),
   ];
 
@@ -66,29 +57,10 @@ class _HomePageState extends State<_HomePage> {
 
   Future<void> _navigateAndReceiveData(BuildContext context) async {
     // Navigate to the second page and await the result when the second page is popped
-    final result = await Navigator.push(
+     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NewPage()),
     );
-
-    // Use the result returned from the second page
-    
-    if (result != null) {
-      Fish fish = result;
-      if (fishes.isNotEmpty) {
-        fishes.add(fish);
-      } else {
-        final databseServis = DatabaseServiceFish();
-        databseServis.addFish(fish);
-        final test = await databseServis.getAll();
-        print(test.length);
-        fishes = test;
-      }
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Received: ${fish.size} '),
-        ));
-
-    }
   }
 
   @override
@@ -123,5 +95,3 @@ class TabData {
 
   TabData({required this.tab, required this.label, required this.icon});
 }
-
-

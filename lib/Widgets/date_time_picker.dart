@@ -1,34 +1,28 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 
-class DateTimePicker extends StatefulWidget
-{
-
-
+class DateTimePicker extends StatefulWidget {
   final TextEditingController dateController;
-
 
   const DateTimePicker({super.key, required this.dateController});
   @override
-  _DateTimePickerState createState() => _DateTimePickerState();
+  DateTimePickerState createState() => DateTimePickerState();
 }
 
-
-
-class _DateTimePickerState extends State<DateTimePicker> {
-void selectDate(BuildContext context) async {
+class DateTimePickerState extends State<DateTimePicker> {
+  void selectDate(BuildContext context) async {
     // Get the current date
     DateTime initialDate = DateTime.now();
     DateTime firstDate = DateTime(2000);
 
     // Show the date picker
-     final DateTime? result = await showAdaptiveDateTimePicker(
-   context: context,
-   initialPickerDateTime: initialDate,
-    firstDate: firstDate,
-    lastDate: initialDate,
-   mode: DateTimeFieldPickerMode.dateAndTime,
- );
+    final DateTime? result = await showAdaptiveDateTimePicker(
+      context: context,
+      initialPickerDateTime: initialDate,
+      firstDate: firstDate,
+      lastDate: initialDate,
+      mode: DateTimeFieldPickerMode.dateAndTime,
+    );
     // If the user picked a date, update the controller with the formatted date
     if (result != null && result != initialDate) {
       setState(() {
@@ -38,7 +32,6 @@ void selectDate(BuildContext context) async {
     }
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Row(

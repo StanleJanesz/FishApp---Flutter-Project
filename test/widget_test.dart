@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fish_app/Pages/add_fish_page.dart';
 import 'package:fish_app/main.dart';
-import 'package:patrol/patrol.dart';
 void main() {
   testWidgets('Add fish page', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewPage()));

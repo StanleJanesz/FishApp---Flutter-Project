@@ -1,47 +1,35 @@
-  import 'package:fish_app/Classes/fish.dart';
-import 'package:fish_app/Classes/fishing_place.dart';
 import 'package:select_field/select_field.dart';
 import 'package:flutter/material.dart';
-import 'package:fish_app/Services/database_service.dart';
-class FishingSpotPicker extends StatefulWidget {
 
-final SelectFieldMenuController<int> menuController;
- FishingSpotPicker({required this.menuController});
+class SelectOptionsControl<String> extends StatefulWidget {
+  final List<Option<String>> options;
 
-  Future<List<Option<int>>> GetOptions() async
-  {
-    var databaseService = DatabaseServiceFishingSpot();
-    var fishingSpots = await databaseService.getAll();
-    int i = 1;
-    return [
-      for (final fishingSpot in fishingSpots)
-        Option<int>(label: fishingSpot.name,value: fishingSpot.id ) 
-    ];
-  }
-
-
+  const SelectOptionsControl({
+    super.key,
+    required this.options,
+  });
 
   @override
-  State<FishingSpotPicker> createState() =>
-      _FishingSpotPickerState();
+  State<SelectOptionsControl<String>> createState() =>
+      _SelectOptionsControlState<String>();
 }
 
-class _FishingSpotPickerState
-    extends State<FishingSpotPicker> {
-  late  Option<int> initalOption = Option(label: 'Okoń',value: 1);
-  late final SelectFieldMenuController<int> menuController;
-  late  List<Option<int>> options =[];
-  void onOptionSelected(Option<int> options) {
+class _SelectOptionsControlState<String>
+    extends State<SelectOptionsControl<String>> {
+  late final List<Option<String>> initalOptions;
+  late final MultiSelectFieldMenuController<String> menuController;
+
+  void onOptionSelected(List<Option<String>> options) {
     setState(() {
-      menuController.selectedOption = options;
+      menuController.selectedOptions = options;
     });
   }
-  
+
   void onOptionRemoved(Option<String> option) {
-    final options = menuController.selectedOption;
-    
+    final options = menuController.selectedOptions;
+    options.remove(option);
     setState(() {
-      menuController.selectedOption = options;
+      menuController.selectedOptions = options;
     });
   }
 
@@ -52,35 +40,29 @@ class _FishingSpotPickerState
   void onTap() {
     menuController.isExpanded = !menuController.isExpanded;
   }
-void initOptions() async
-{
-  var initalOption = (await widget.GetOptions())[0];
-   
-   var options = await widget.GetOptions();
-    setState(() {
-      
-      this.options = options;
-    });
-}
+
   @override
-  void initState()  {
-    initOptions();
-    this.menuController = widget.menuController;
+  void initState() {
     super.initState();
-    this.menuController.isExpanded = false;
+    initalOptions = widget.options.sublist(1, 3);
+    menuController = MultiSelectFieldMenuController(
+      isExpanded: true,
+      initalOptions: initalOptions,
+    );
   }
 
   @override
   void dispose() {
+    menuController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Column(
       children: [
-        SelectField<int>(
-          options: options,
+        SelectField<String>(
+          options: widget.options,
           onTap: onTap,
           onTapOutside: onTapOutside,
           menuController: menuController,
@@ -118,6 +100,19 @@ void initOptions() async
               );
             },
           ),
+        ),
+        Wrap(
+          spacing: 10,
+          runSpacing: 20,
+          children: menuController.selectedOptions
+              .map(
+                (option) => Chip(
+                  label: Text(option.label),
+                  onDeleted: () => onOptionRemoved(option),
+                  shape: const StadiumBorder(),
+                ),
+              )
+              .toList(),
         ),
       ],
     );

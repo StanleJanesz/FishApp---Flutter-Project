@@ -1,44 +1,32 @@
-  import 'package:fish_app/Classes/fish.dart';
+
 import 'package:select_field/select_field.dart';
 import 'package:flutter/material.dart';
-import 'package:fish_app/Services/database_service.dart';
-class FishTypePicker extends StatefulWidget {
-  
-final SelectFieldMenuController<int> menuController;
- FishTypePicker({required this.menuController});
 
-  Future<List<Option<int>>> GetOptions() async
-  {
-    var databaseService = DatabaseServiceFishType();
-    var fishTypes = await databaseService.getAll();
-    int i = 1;
+class GroupByWidget extends StatefulWidget {
+  final SelectFieldMenuController<int> menuController;
+
+  const GroupByWidget({super.key, required this.menuController});
+
+  Future<List<Option<int>>> getOptions() async {
     return [
-      for (final fishType in fishTypes)
-        Option<int>(label: fishType.type,value: fishType.id ) 
+      Option<int>(label: "Size ", value: 0),
+      Option<int>(label: "Location ", value: 1),
+      Option<int>(label: "Fish Type ", value: 2),
     ];
   }
 
-
-
   @override
-  State<FishTypePicker> createState() =>
-      _FishTypePickerState();
+  State<GroupByWidget> createState() => _GroupByWidgetState();
 }
 
-class _FishTypePickerState
-    extends State<FishTypePicker> {
-  late  Option<int> initalOption = Option(label: 'Okoń',value: 1);
+class _GroupByWidgetState extends State<GroupByWidget> {
+  late Option<int> initalOption = Option<int>(label: "Size ", value: 0);
+
   late final SelectFieldMenuController<int> menuController;
-  late  List<Option<int>> options =[];
+
+  late List<Option<int>> options = [];
+
   void onOptionSelected(Option<int> options) {
-    setState(() {
-      menuController.selectedOption = options;
-    });
-  }
-  
-  void onOptionRemoved(Option<String> option) {
-    final options = menuController.selectedOption;
-    
     setState(() {
       menuController.selectedOption = options;
     });
@@ -51,22 +39,20 @@ class _FishTypePickerState
   void onTap() {
     menuController.isExpanded = !menuController.isExpanded;
   }
-void initOptions() async
-{
-  var initalOption = (await widget.GetOptions())[0];
-   
-   var options = await widget.GetOptions();
+
+  void initOptions() async {
+    var options = await widget.getOptions();
     setState(() {
-      
       this.options = options;
     });
-}
+  }
+
   @override
-  void initState()  {
+  void initState() {
     initOptions();
-    this.menuController = widget.menuController;
+    menuController = widget.menuController;
     super.initState();
-    this.menuController.isExpanded = false;
+    menuController.isExpanded = false;
   }
 
   @override
@@ -75,7 +61,7 @@ void initOptions() async
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Column(
       children: [
         SelectField<int>(
@@ -122,4 +108,3 @@ void initOptions() async
     );
   }
 }
-

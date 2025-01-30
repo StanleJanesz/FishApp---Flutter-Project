@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
 
+class FunFucts {
+  String name = 'Imie Nazwisko';
+  String fact = 'Favorite fishing spot';
+}
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  // Example state variables to hold profile information
-  String name = 'John Doe';
-  String profilePictureUrl = 'https://www.example.com/profile_picture.jpg';
-  String bio = 'Software Developer | Flutter Enthusiast | Tech Lover';
-  String getName()
-  {
+class ProfilePageState extends State<ProfilePage> {
+  String getName() {
     return 'Imie Nazwisko';
-  }
-
-  void updateProfile(String newName, String newBio) {
-    setState(() {
-      name = newName;
-      bio = newBio;
-    });
   }
 
   @override
@@ -33,9 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () {
-
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -45,96 +35,89 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           ProfileInfoCard(),
           BorderedElevatedBox(
-            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
-            text:  'favorite fishing spot',
+            imageUrl: 'assets/images/fish.png',
+            text: 'favorite fishing spot',
             otherText: 'Location 1',
           ),
           BorderedElevatedBox(
-            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
-            text:  'Bigest fish',
+            imageUrl: 'assets/images/fish.png',
+            text: 'Bigest fish',
             otherText: 'Fish 1 (100cm)',
           ),
           BorderedElevatedBox(
-            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
-            text:  'favorite fish',
+            imageUrl: 'assets/images/fish.png',
+            text: 'favorite fish',
             otherText: 'Fish 1 (32 times)',
           ),
           BorderedElevatedBox(
-            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
-            text:  'last fish',
+            imageUrl: 'assets/images/fish.png',
+            text: 'last fish',
             otherText: 'Fish 145 (12.12.2021)',
           ),
           BorderedElevatedBox(
-            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
-            text:  'favorite fish',
+            imageUrl: 'assets/images/fish.png',
+            text: 'favorite fish',
             otherText: 'Fish 1 (32 times)',
           ),
           BorderedElevatedBox(
-            imageUrl: 'https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
-            text:  'least often fish',
+            imageUrl: 'assets/images/fish.png',
+            text: 'least often fish',
             otherText: 'Fish 12 (1 times)',
           ),
-
-
-
         ],
-      ) ,
+      ),
     );
   }
 }
 
-class ProfileInfoCard extends StatefulWidget
-{
+class ProfileInfoCard extends StatefulWidget {
   const ProfileInfoCard({super.key});
 
   @override
   State<ProfileInfoCard> createState() => _ProfileInfoCardState();
-
 }
-class _ProfileInfoCardState extends State<ProfileInfoCard>
-{
+
+class _ProfileInfoCardState extends State<ProfileInfoCard> {
   @override
   Widget build(BuildContext context) {
-      return Container(
-        decoration: BoxDecoration(
+    return Container(
+      decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
-            color:  Colors.grey,
+            color: Colors.grey,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12),
-          boxShadow:  [
+          boxShadow: [
             BoxShadow(
               color: Colors.blue.withOpacity(0.5),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
-          ]
-
-        ),
-        child: Row(
-          children: [
-            ConstrainedBox(constraints: BoxConstraints(maxWidth: 100, maxHeight: 100), child:
-            Image.network('https://th.bing.com/th/id/OIP.jrtcae1CNzs3q01Td3mhfAHaDt?rs=1&pid=ImgDetMain',
+          ]),
+      child: Row(
+        children: [
+          ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 100, maxHeight: 100),
+              child: Image.asset(
+                'assets/images/profile.jpg',
                 height: 100,
                 width: 100,
-                fit: BoxFit.cover,)),
-            Column(
-              children: [
-                 Text('Name: User Name'),
-                 Text('Other: Other'),
-                 Text('Other: Other'),
-                 Text('Other: Other'),
-              ],
-            )
-          ],
-        ),
-      );
+                fit: BoxFit.cover,
+              )),
+          Column(
+            children: [
+              Text('Name: User Name'),
+              Text('Other: Other'),
+              Text('Other: Other'),
+              Text('Other: Other'),
+            ],
+          )
+        ],
+      ),
+    );
   }
-
-
 }
-
 
 class BorderedElevatedBox extends StatefulWidget {
   final String imageUrl;
@@ -176,12 +159,12 @@ class _BorderedElevatedBoxState extends State<BorderedElevatedBox> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: _isSelected
               ? [
-            BoxShadow(
-              color: Colors.blue.withOpacity(0.5),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ]
+                  BoxShadow(
+                    color: Colors.blue.withOpacity(0.5),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
               : [],
         ),
         child: Column(
@@ -189,7 +172,7 @@ class _BorderedElevatedBoxState extends State<BorderedElevatedBox> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
+              child: Image.asset(
                 widget.imageUrl,
                 height: 100,
                 width: 100,
@@ -198,7 +181,7 @@ class _BorderedElevatedBoxState extends State<BorderedElevatedBox> {
             ),
             const SizedBox(height: 10),
             Text(
-              _isSelected ?  widget.otherText : widget.text,
+              _isSelected ? widget.otherText : widget.text,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),

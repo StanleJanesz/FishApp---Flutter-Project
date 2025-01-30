@@ -1,46 +1,41 @@
-  import 'package:fish_app/Classes/fish.dart';
 import 'package:select_field/select_field.dart';
 import 'package:flutter/material.dart';
 import 'package:fish_app/Services/database_service.dart';
-class GroupByWidget extends StatefulWidget {
-  
-final SelectFieldMenuController<int> menuController;
 
- GroupByWidget({required this.menuController});
+class FishingSpotPicker extends StatefulWidget {
+  final SelectFieldMenuController<int> menuController;
+  const FishingSpotPicker({super.key, required this.menuController});
 
-  Future<List<Option<int>>> GetOptions() async
-  {
-    
+  Future<List<Option<int>>> getOptions() async {
+    var databaseService = DatabaseServiceFishingSpot();
+    var fishingSpots = await databaseService.getAll();
     return [
-      
-        Option<int>(label: "Size ", value: 0),
-        Option<int>(label: "Location ", value: 1),
-        Option<int>(label: "Fish Type ", value: 2), 
+      for (final fishingSpot in fishingSpots)
+        Option<int>(label: fishingSpot.name, value: fishingSpot.id)
     ];
   }
 
-
-
   @override
-  State<GroupByWidget> createState() =>
-      _GroupByWidgetState();
+  State<FishingSpotPicker> createState() => _FishingSpotPickerState();
 }
 
-class _GroupByWidgetState
-    extends State<GroupByWidget> {
-
-  late  Option<int> initalOption = Option<int>(label: "Size ", value: 0);
-
+class _FishingSpotPickerState extends State<FishingSpotPicker> {
+  late Option<int> initalOption = Option(label: 'Okoń', value: 1);
   late final SelectFieldMenuController<int> menuController;
-
-  late  List<Option<int>> options =[];
-
+  late List<Option<int>> options = [];
   void onOptionSelected(Option<int> options) {
     setState(() {
       menuController.selectedOption = options;
     });
   }
-  
+
+  void onOptionRemoved(Option<String> option) {
+    final options = menuController.selectedOption;
+
+    setState(() {
+      menuController.selectedOption = options;
+    });
+  }
 
   void onTapOutside() {
     menuController.isExpanded = false;
@@ -49,21 +44,21 @@ class _GroupByWidgetState
   void onTap() {
     menuController.isExpanded = !menuController.isExpanded;
   }
-  
-void initOptions() async
-{
-   var options = await widget.GetOptions();
+
+  void initOptions() async {
+
+    var options = await widget.getOptions();
     setState(() {
-      
       this.options = options;
     });
-}
+  }
+
   @override
-  void initState()  {
+  void initState() {
     initOptions();
-    this.menuController = widget.menuController;
+    menuController = widget.menuController;
     super.initState();
-    this.menuController.isExpanded = false;
+    menuController.isExpanded = false;
   }
 
   @override
@@ -72,7 +67,7 @@ void initOptions() async
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Column(
       children: [
         SelectField<int>(
@@ -119,4 +114,3 @@ void initOptions() async
     );
   }
 }
-

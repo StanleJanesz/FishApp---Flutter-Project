@@ -1,72 +1,86 @@
+import 'package:fish_app/Classes/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:fish_app/Classes/fish.dart';
 import 'package:fish_app/Services/database_service.dart';
 import 'package:fish_app/Widgets/number_picker.dart';
-import 'package:date_field/date_field.dart';
 import 'package:fish_app/Widgets/date_time_picker.dart';
-import 'package:fish_app/Widgets/search_choice_list.dart';
-import 'package:fish_app/widgets/fish_type_picker.dart';
-import 'package:fish_app/widgets/fishing_spot_picker.dart';
+import 'package:fish_app/Widgets/drop_dow_widgets/fishing_spot_picker.dart';
+import 'package:fish_app/Widgets/drop_dow_widgets/fish_type_picker.dart';
 import 'package:select_field/select_field.dart';
+import 'package:weather/weather.dart';
+import 'package:fish_app/Services/weather_service.dart';
+import 'package:fish_app/Widgets/drop_dow_widgets/bait_picker.dart';
+
 class NewPage extends StatefulWidget {
   const NewPage({super.key});
 
   @override
-  _NewPageState createState() => _NewPageState();
+  NewPageState createState() => NewPageState();
 }
 
-class _NewPageState extends State<NewPage> {
+class NewPageState extends State<NewPage> {
   final _formKey = GlobalKey<FormState>(); // Global key for form state
-  SelectFieldMenuController<int> typeController = SelectFieldMenuController<int>();
-  SelectFieldMenuController<int> spotController = SelectFieldMenuController<int>();
+  SelectFieldMenuController<int> typeController =
+      SelectFieldMenuController<int>();
+  SelectFieldMenuController<int> spotController =
+      SelectFieldMenuController<int>();
+  SelectFieldMenuController<int> baitController =
+      SelectFieldMenuController<int>();
   final TextEditingController _intController = TextEditingController();
   DateTime? pickedDate;
   List<String> items = FishType.types;
   String? selectedItem;
   Fish fish = Fish(
-    id : 0,
-      size: 0,
-      date: DateTime.now(),
-      catchedBy: "user",
-      type: 0,
-      spotId: 0,
-      baitId: 0,
-      weatherId: 0,
+    id: 0,
+    size: 0,
+    date: DateTime.now(),
+    catchedBy: "user",
+    type: 0,
+    spotId: 0,
+    baitId: 0,
+    weatherId: 0,
   );
 
   final TextEditingController _dateController = TextEditingController();
 
+  void _addfish() async {
+    final size = _intController.text;
+    final intSize = int.tryParse(size);
+    final type = typeController.selectedOption?.value ?? 0;
+    final spot = spotController.selectedOption?.value ?? 0;
+    final bait = baitController.selectedOption?.value ?? 0;
+    fish.size = intSize ?? 0;
+    fish.date = pickedDate ?? DateTime.now();
+    fish.catchedBy = "user";
+    fish.type = type;
+    fish.spotId = spot;
+    fish.baitId = bait;
+    int weatherId = 0;
+    try {
+      WeatherService weatherService = WeatherService();
+      Weather? weather = await weatherService.getWeatherOnline();
+      if (weather == null) {
+        throw Exception('Failed to get weather data');
+      }
+      WeatherLocal wetherToBeSaved = WeatherLocal.adaptFromWeather(weather);
+      final databaseServiceWeather = DatabseServiceWeather();
+      weatherId = await databaseServiceWeather.addWeather(wetherToBeSaved);
+      fish.weatherId = weatherId;
+    } 
+    catch (e) 
+    {
+      fish.weatherId = 0;
+    }
+    fish.weatherId = weatherId;
 
+    final databaseServiceFish = DatabaseServiceFish();
+    databaseServiceFish.addFish(fish);
+  }
 
-  // This method validates and shows the input values
   void _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
-      // If the form is valid, show a dialog with the input values
-      final size = _intController.text;
-
-      // Optionally convert the int input to a number if needed
-      final intSize = int.tryParse(size);
-      final type = typeController.selectedOption?.value ?? 0;
-      final spot = spotController.selectedOption?.value ?? 0;
-      fish.size = intSize ?? 0;
-      fish.date = pickedDate ?? DateTime.now();
-      fish.catchedBy = "user";
-      fish.type = type;
-      fish.spotId = spot;
-      fish.baitId = 0; 
-      print(spot);
-      DatabaseServiceFish databaseServiceFish = DatabaseServiceFish();
-
-       
-
-      Navigator.pop(
-          context, fish); // Go back to the previous screen after submission
-      final databseServis = DatabaseServiceFish();
-      await databseServis.addFish(fish);
-      List<Fish> fff= await databaseServiceFish.getAllBySpotId(spot);
-      print(fff.length);
-      final test = await databseServis.getAll();
-      print(test.length);
+      _addfish();
+      Navigator.pop(context);
     }
   }
 
@@ -77,7 +91,7 @@ class _NewPageState extends State<NewPage> {
       _dateController.text = "${DateTime.now().toLocal()}".split(' ')[0];
     }
     return Scaffold(
-      appBar: AppBar(title: Text('New Page')),
+      appBar: AppBar(title: Text('New Fish Page')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -85,23 +99,41 @@ class _NewPageState extends State<NewPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Checkbox(
-                  value: checkboxValue,
-                  onChanged: (value) {
-                    setState(() {
-                      checkboxValue = value!;
-                    });
-                  }),
-             
-              FishSizeWidget(isSelected: checkboxValue,textController: _intController),
+              Image.asset(
+                'assets/images/boat.jpg',
+                height: 100,
+                width: 100,
+                fit: BoxFit.cover,
+              ),
+
+              FishSizeWidget(
+                  isSelected: checkboxValue, textController: _intController),
+              Row(
+                children: [
+                  Text('use number picker'),
+                  Checkbox(
+                      value: checkboxValue,
+                      onChanged: (value) {
+                        setState(() {
+                          checkboxValue = value!;
+                        });
+                      }),
+                ],
+              ),
               SizedBox(height: 20),
               Text('date'),
               DateTimePicker(dateController: _dateController),
-              Text('type'),
-              FishTypePicker(menuController: typeController),   
+
+              FishTypePicker(menuController: typeController),
+              Text('Select a fish type'),
+
+              BaitPicker(menuController: baitController),
+              Text('Select a bait'),
+
               FishingSpotPicker(menuController: spotController),
+              Text('Select a fishing spot'),
               SizedBox(height: 20),
-              // Submit button
+
               ElevatedButton(
                 onPressed: _submitForm,
                 child: Text('Submit'),
@@ -114,82 +146,54 @@ class _NewPageState extends State<NewPage> {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class FishSizeWidget extends StatefulWidget {
-  bool isSelected = false;
-  TextEditingController textController = TextEditingController(); 
-  FishSizeWidget({super.key, required this.isSelected,required this.textController});
+  final bool? isSelected;
+  final TextEditingController textController;
+  const FishSizeWidget({super.key, this.isSelected, required this.textController});
   @override
-  _FishSizeWidgetState createState() => _FishSizeWidgetState();
+  FishSizeWidgetState createState() => FishSizeWidgetState();
 }
 
-class _FishSizeWidgetState extends State<FishSizeWidget> {
-  final int _currentValue = 3;
-  
+class FishSizeWidgetState extends State<FishSizeWidget> {
+  late bool? isSelected;
+  @override
+  void initState() {
+    isSelected = widget.isSelected;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    if(!widget.isSelected)
-    {
-    return Column(   
-      children: <Widget>[
-        IntegerExample(   intController: widget.textController),    
-        Text('Current value: $_currentValue'),
-      ],
-    );
-    }
-    else
-    {
-      return  TextFormField(
-                controller: widget.textController,
-                keyboardType: TextInputType.number, // Only numbers allowed
-                decoration: InputDecoration(
-                  labelText: 'Enter an Fish Size',  
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter Fish Size';
-                  }
-                  final intValue = int.tryParse(value);
-                  if (intValue == null) {
-                    return 'Please enter a valid integer';
-                  }
-                  return null;
-                },
-              );
+    if (!(isSelected ?? false)) {
+      return Column(
+        children: <Widget>[
+          IntegerExample(intController: widget.textController),
+        ],
+      );
+    } else {
+      return TextFormField(
+        controller: widget.textController,
+        keyboardType: TextInputType.number, // Only numbers allowed
+        decoration: InputDecoration(
+          labelText: 'Enter an Fish Size',
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter Fish Size';
+          }
+          final intValue = int.tryParse(value);
+          if (intValue == null) {
+            return 'Please enter a valid integer';
+          }
+          if (intValue <= 0) {
+            return 'Please enter a positive integer';
+          }
+          if (intValue > 1000) {
+            return 'Please enter a number less than 1000';
+          }
+          return null;
+        },
+      );
     }
   }
 }

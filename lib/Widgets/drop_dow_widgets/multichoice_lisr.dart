@@ -1,31 +1,34 @@
-  import 'package:select_field/select_field.dart';
+import 'package:select_field/select_field.dart';
 import 'package:flutter/material.dart';
 
-class SelectOptionsControl<String> extends StatefulWidget {
-  final List<Option<String>> options;
+class MultiSelectOptionsControl<int> extends StatefulWidget {
+  final List<Option<int>> options;
 
-  const SelectOptionsControl({
+  final MultiSelectFieldMenuController<int> menuController;
+
+  const MultiSelectOptionsControl({
     super.key,
     required this.options,
+    required this.menuController,
   });
 
   @override
-  State<SelectOptionsControl<String>> createState() =>
-      _SelectOptionsControlState<String>();
+  State<MultiSelectOptionsControl<int>> createState() =>
+      _MultiSelectOptionsControlState<int>();
 }
 
-class _SelectOptionsControlState<String>
-    extends State<SelectOptionsControl<String>> {
-  late final List<Option<String>> initalOptions;
-  late final MultiSelectFieldMenuController<String> menuController;
+class _MultiSelectOptionsControlState<int>
+    extends State<MultiSelectOptionsControl<int>> {
+  late final List<Option<int>> initalOptions;
+  late final MultiSelectFieldMenuController<int> menuController;
 
-  void onOptionSelected(List<Option<String>> options) {
+  void onOptionSelected(List<Option<int>> options) {
     setState(() {
       menuController.selectedOptions = options;
     });
   }
 
-  void onOptionRemoved(Option<String> option) {
+  void onOptionRemoved(Option<int> option) {
     final options = menuController.selectedOptions;
     options.remove(option);
     setState(() {
@@ -44,16 +47,11 @@ class _SelectOptionsControlState<String>
   @override
   void initState() {
     super.initState();
-    initalOptions = widget.options.sublist(1, 3);
-    menuController = MultiSelectFieldMenuController(
-      isExpanded: true,
-      initalOptions: initalOptions,
-    );
+    menuController = widget.menuController;
   }
 
   @override
   void dispose() {
-    menuController.dispose();
     super.dispose();
   }
 
@@ -61,10 +59,12 @@ class _SelectOptionsControlState<String>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SelectField<String>(
+        MultiSelectField<int>(
           options: widget.options,
+          fieldText: 'Select fruit',
           onTap: onTap,
           onTapOutside: onTapOutside,
+          onOptionsSelected: onOptionSelected,
           menuController: menuController,
           menuDecoration: MenuDecoration(
             childBuilder: (context, option, isSelected) {
@@ -119,23 +119,22 @@ class _SelectOptionsControlState<String>
   }
 }
 
-List<Option<String>> optionsGenerator()
-  {
-    List<Option<String>> options = [];
-    options.add(Option(label: 'Okoń',value:  'Okoń'));
-    options.add(Option(label: 'Sum',value:  'Sum'));
-    options.add(Option(label: 'Leszcz', value: 'Leszcz'));
-    options.add(Option(label: 'Szczsssupak',value:  'Szczupak'));
-    options.add(Option(label: 'Szczssupak',value:  'Szczupak'));
-    options.add(Option(label: 'Szczssupak',value:  'Szczupak'));
-    options.add(Option(label: 'Szczuaaapak',value:  'Szczupak'));
-    options.add(Option(label: 'Szczssupsak',value:  'Szczupak'));
-    options.add(Option(label: 'Szczaaupak',value:  'Szczupak'));
-    options.add(Option(label: 'Szcazupsak',value:  'Szczupak'));
-    options.add(Option(label: 'Szczupak',value:  'Szczupak'));
-    options.add(Option(label: 'Szczaasupak',value:  'Szczupak'));
-    options.add(Option(label: 'Szczssupak',value:  'Szczupak'));
-    options.add(Option(label: 'Szcszsupak',value:  'Szczupak'));
-    options.add(Option(label: 'Szczupsak',value:  'Szczupak'));
-    return options;
-  }
+List<Option<String>> optionsGenerator() {
+  List<Option<String>> options = [];
+  options.add(Option(label: 'Okoń', value: 'Okoń'));
+  options.add(Option(label: 'Sum', value: 'Sum'));
+  options.add(Option(label: 'Leszcz', value: 'Leszcz'));
+  options.add(Option(label: 'Szczsssupak', value: 'Szczupak'));
+  options.add(Option(label: 'Szczssupak', value: 'Szczupak'));
+  options.add(Option(label: 'Szczssupak', value: 'Szczupak'));
+  options.add(Option(label: 'Szczuaaapak', value: 'Szczupak'));
+  options.add(Option(label: 'Szczssupsak', value: 'Szczupak'));
+  options.add(Option(label: 'Szczaaupak', value: 'Szczupak'));
+  options.add(Option(label: 'Szcazupsak', value: 'Szczupak'));
+  options.add(Option(label: 'Szczupak', value: 'Szczupak'));
+  options.add(Option(label: 'Szczaasupak', value: 'Szczupak'));
+  options.add(Option(label: 'Szczssupak', value: 'Szczupak'));
+  options.add(Option(label: 'Szcszsupak', value: 'Szczupak'));
+  options.add(Option(label: 'Szczupsak', value: 'Szczupak'));
+  return options;
+}

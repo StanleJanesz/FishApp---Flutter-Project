@@ -2,28 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class IntegerExample extends StatefulWidget {
-  TextEditingController  intController = TextEditingController();
-  IntegerExample({super.key, required this.intController});
+  final TextEditingController intController;
+  IntegerExample({super.key, required this.intController}) {
+    int value = intController.text.isEmpty ? 1 : int.parse(intController.text);
+    value = value < 1 ? 1 : value;
+    value = value > 1000 ? 1000 : value;
+    intController.text = value.toString();
+  }
   @override
-  _IntegerExampleState createState() => _IntegerExampleState();
+  IntegerExampleState createState() => IntegerExampleState();
 }
 
-class _IntegerExampleState extends State<IntegerExample> {
-  int _currentValue = 3;
+class IntegerExampleState extends State<IntegerExample> {
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         NumberPicker(
-          value: widget.intController.text.isEmpty ? 0 : int.parse(widget.intController.text),
-           axis : Axis.horizontal,
-          minValue: 0,
-          maxValue: 100,
-          onChanged: (value) => setState(() { _currentValue =  value;
-          widget.intController.text = value.toString();
-          widget.intController.value = TextEditingValue(text: value.toString());
-  }) ,
+          value: widget.intController.text.isEmpty
+              ? 0
+              : int.parse(widget.intController.text),
+          axis: Axis.horizontal,
+          minValue: 1,
+          maxValue: 1000,
+          onChanged: (value) => setState(() {
+            widget.intController.text = value.toString();
+            widget.intController.value =
+                TextEditingValue(text: value.toString());
+          }),
         ),
       ],
     );
