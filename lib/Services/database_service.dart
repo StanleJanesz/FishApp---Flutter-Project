@@ -11,7 +11,7 @@ import 'package:fish_app/Classes/weather.dart';
 abstract class DatabaseService {
   Future<Database> get database;
   Future<Database> _openDatabase();
-  static final String databaseName = "fishAppDatabase.db";
+  static final String databaseName = "fishAppDatabase1.db";
   static Future<void> onCreate(Database database) async {
     var db = database;
     await db.execute(

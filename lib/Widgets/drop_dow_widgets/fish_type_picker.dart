@@ -77,6 +77,11 @@ class _FishTypePickerState extends State<FishTypePicker> {
           onTapOutside: onTapOutside,
           menuController: menuController,
           menuDecoration: MenuDecoration(
+              backgroundDecoration: BoxDecoration(
+              color: const Color.fromARGB(255, 105, 156, 204),
+              borderRadius: BorderRadius.circular(20),
+
+            ),
             childBuilder: (context, option, isSelected) {
               return Row(
                 children: [

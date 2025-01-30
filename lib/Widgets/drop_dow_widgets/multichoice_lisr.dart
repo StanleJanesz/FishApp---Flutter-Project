@@ -61,12 +61,17 @@ class _MultiSelectOptionsControlState<int>
       children: [
         MultiSelectField<int>(
           options: widget.options,
-          fieldText: 'Select fruit',
+          fieldText: 'Select filters',
           onTap: onTap,
           onTapOutside: onTapOutside,
           onOptionsSelected: onOptionSelected,
           menuController: menuController,
           menuDecoration: MenuDecoration(
+            backgroundDecoration: BoxDecoration(
+              color: const Color.fromARGB(255, 105, 156, 204),
+              borderRadius: BorderRadius.circular(20),
+
+            ),
             childBuilder: (context, option, isSelected) {
               return Row(
                 children: [
@@ -93,7 +98,7 @@ class _MultiSelectOptionsControlState<int>
                     color: Theme.of(context)
                         .textButtonTheme
                         .style
-                        ?.foregroundColor
+                        ?.backgroundColor
                         ?.resolve({}),
                   ),
                 ],
@@ -119,22 +124,3 @@ class _MultiSelectOptionsControlState<int>
   }
 }
 
-List<Option<String>> optionsGenerator() {
-  List<Option<String>> options = [];
-  options.add(Option(label: 'Okoń', value: 'Okoń'));
-  options.add(Option(label: 'Sum', value: 'Sum'));
-  options.add(Option(label: 'Leszcz', value: 'Leszcz'));
-  options.add(Option(label: 'Szczsssupak', value: 'Szczupak'));
-  options.add(Option(label: 'Szczssupak', value: 'Szczupak'));
-  options.add(Option(label: 'Szczssupak', value: 'Szczupak'));
-  options.add(Option(label: 'Szczuaaapak', value: 'Szczupak'));
-  options.add(Option(label: 'Szczssupsak', value: 'Szczupak'));
-  options.add(Option(label: 'Szczaaupak', value: 'Szczupak'));
-  options.add(Option(label: 'Szcazupsak', value: 'Szczupak'));
-  options.add(Option(label: 'Szczupak', value: 'Szczupak'));
-  options.add(Option(label: 'Szczaasupak', value: 'Szczupak'));
-  options.add(Option(label: 'Szczssupak', value: 'Szczupak'));
-  options.add(Option(label: 'Szcszsupak', value: 'Szczupak'));
-  options.add(Option(label: 'Szczupsak', value: 'Szczupak'));
-  return options;
-}

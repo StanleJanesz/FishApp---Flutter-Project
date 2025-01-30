@@ -2,7 +2,6 @@ import 'package:fish_app/Classes/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:fish_app/Classes/fish.dart';
 import 'package:fish_app/Services/database_service.dart';
-import 'package:fish_app/Widgets/number_picker.dart';
 import 'package:fish_app/Widgets/date_time_picker.dart';
 import 'package:fish_app/Widgets/drop_dow_widgets/fishing_spot_picker.dart';
 import 'package:fish_app/Widgets/drop_dow_widgets/fish_type_picker.dart';
@@ -10,7 +9,7 @@ import 'package:select_field/select_field.dart';
 import 'package:weather/weather.dart';
 import 'package:fish_app/Services/weather_service.dart';
 import 'package:fish_app/Widgets/drop_dow_widgets/bait_picker.dart';
-
+import 'package:fish_app/Widgets/fish_size_widget.dart';
 class NewPage extends StatefulWidget {
   const NewPage({super.key});
 
@@ -143,57 +142,5 @@ class NewPageState extends State<NewPage> {
         ),
       ),
     );
-  }
-}
-
-class FishSizeWidget extends StatefulWidget {
-  final bool? isSelected;
-  final TextEditingController textController;
-  const FishSizeWidget({super.key, this.isSelected, required this.textController});
-  @override
-  FishSizeWidgetState createState() => FishSizeWidgetState();
-}
-
-class FishSizeWidgetState extends State<FishSizeWidget> {
-  late bool? isSelected;
-  @override
-  void initState() {
-    isSelected = widget.isSelected;
-    super.initState();
-  }
-  @override
-  Widget build(BuildContext context) {
-    if (!(isSelected ?? false)) {
-      return Column(
-        children: <Widget>[
-          IntegerExample(intController: widget.textController),
-        ],
-      );
-    } else {
-      return TextFormField(
-        controller: widget.textController,
-        keyboardType: TextInputType.number, // Only numbers allowed
-        decoration: InputDecoration(
-          labelText: 'Enter an Fish Size',
-          border: OutlineInputBorder(),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter Fish Size';
-          }
-          final intValue = int.tryParse(value);
-          if (intValue == null) {
-            return 'Please enter a valid integer';
-          }
-          if (intValue <= 0) {
-            return 'Please enter a positive integer';
-          }
-          if (intValue > 1000) {
-            return 'Please enter a number less than 1000';
-          }
-          return null;
-        },
-      );
-    }
   }
 }
